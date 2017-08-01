@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-
+from django.http import HttpResponse
 # Create your views here.
 def home(request):
-	context = locals()
-	template = 'borrow/index.html'
+	# context = locals()
+	# template = 'borrow/index.html'
 	
-	pass
+	# return render(request,template,context)
+	return HttpResponse("borrow")
