@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'^$', views.home, name='home'),
     url(r'^lend/', include('lend.urls')),
     url(r'^borrow/', include('borrow.urls')),
+    
+    url(r'^accounts/', include('allauth.urls')),
 ]

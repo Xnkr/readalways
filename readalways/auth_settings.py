@@ -3,7 +3,8 @@
 # DO NOT CHANGE THIS FILE. Instead, copy it to local_settings.py
 # and make your changes there.
 
-
+LOGIN_URL = '/lend/login/'
+LOGIN_REDIRECT_URL = '/lend/'
 # Specifies the login method to use -- whether the user logs in by entering
 # their username, e-mail address, or either one of both. Possible values
 # are 'username' | 'email' | 'username_email'
