@@ -22,7 +22,4 @@ app_name = "lend"
 
 urlpatterns = [
     url(r'^$', views.home, name='lend_home'),    
-   url(r'^login/', LoginView.as_view(), name="lend_login" ),
-   url(r'^signup/', SignupView.as_view(), name="lend_signup" ),
-   url(r'^logout/', LogoutView.as_view(), name="lend_logout" ),
 ]
