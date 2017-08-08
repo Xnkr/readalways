@@ -1,1 +1,8 @@
-Hello {{ name }}
+Hello {{ name.username }}
+<br>
+Books you are lending
+<br>
+{% for book in books %}
+{{ book }}
+<br>	
+{% endfor %}

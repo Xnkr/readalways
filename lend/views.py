@@ -5,11 +5,17 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+
+from . import models
 # Create your views here.
 
-@login_required(login_url='/accounts/login/')
+@login_required
 def home(request):
-	string = "hello"
-	# return HttpResponse(string)
-	return render(request, 'lend/index.html', {'name' : request.user.username })
+	template_name = 'lend/index.html'
+	books = models.Book.objects.filter(book_lender=request.user.pk)
+	context = {
+		'name': request.user,
+		'books' : books,
+	}
+	return render(request, template_name, context)
 
