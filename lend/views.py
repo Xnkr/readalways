@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
-from django.views.generic import CreateView,UpdateView,DeleteView
 from django import forms
-
 from . import models
 # Create your views here.
 
@@ -47,11 +44,7 @@ def create_book(request):
             }
             return render(request, 'lend/create_book.html', context)
         book.save()
-        context = {
-			'name': request.user,
-			'books' : models.Book.objects.filter(book_lender=request.user.pk),
-		}
-        return render(request, 'lend/index.html', context)
+        return redirect('lend:lend_home')
     context = {
         "form": form,
     }
@@ -76,3 +69,17 @@ def update_book(request,book_id):
 		form.save()
 		return redirect('lend:lend_home')
 	return direct_to_template(request, 'lend/create_book.html', {'form': form})
+
+@login_required
+def details(request,book_id):
+	book = get_object_or_404(models.Book, id=book_id)
+	errors = ""
+	if not book.book_lender == request.user:
+		errors = "You did not lend this book. Visit the borrower section"
+	context = {
+		'book':book,
+		'user':request.user,
+		'errors': errors,
+	}
+	template_name = 'lend/details.html'
+	return render(request, template_name, context )

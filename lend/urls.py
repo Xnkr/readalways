@@ -16,7 +16,6 @@ Including another URLconf
 from django.conf.urls import url,include
 from django.contrib import admin
 from . import views
-from allauth.account.views import LoginView, SignupView, LogoutView
 
 app_name = "lend"
 
@@ -24,5 +23,6 @@ urlpatterns = [
     url(r'^$', views.home, name='lend_home'),    
     url(r'^add$', views.create_book, name='lend-book-add'),
     url(r'^(?P<book_id>[0-9]+)/delete_book/$', views.delete_book, name='lend-book-delete'),
-    url(r'^(?P<book_id>[0-9]+)/$', views.update_book, name='lend-book-update'),
+    url(r'^(?P<book_id>[0-9]+)/update_book/$', views.update_book, name='lend-book-update'),
+    url(r'^(?P<book_id>[0-9]+)/$', views.details, name='lend-book-details'),
 ]

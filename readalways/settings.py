@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 
     'lend.apps.LendConfig',
-    'borrow.apps.BorrowConfig'
+    'borrow.apps.BorrowConfig',
+
+    'django_cleanup',
 ]
 
 MIDDLEWARE_CLASSES = [
