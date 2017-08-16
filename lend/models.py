@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 import os
 from uuid import uuid4
-
+from django.urls import reverse
 
 # Create your models here.
 
@@ -48,3 +48,6 @@ class Book(models.Model):
 
 	def __str__(self):
 		return '%s - %s - %s' % (self.book_name,self.book_author,self.book_lender)
+
+	def get_absolute_url(self):
+		return reverse('lend:lend_home')
