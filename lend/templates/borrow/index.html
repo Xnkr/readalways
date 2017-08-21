@@ -3,5 +3,8 @@ Hello {{ name }}
 List of books to be borrowed
 <br>
 {% for book in books %}
-	<a href="{% url "borrow:book-details" book.id %}">{{book}}</a> <br>
+	{% if book.book_borrowable %}		
+		<a href="{% url "borrow:book-details" book.id %}">{{book}}</a> <br>
+	{% endif %}
+	
 {% endfor %}

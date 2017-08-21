@@ -6,7 +6,9 @@ from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.urls import reverse
 from . import models
+from borrow import models as b_models
 # Create your views here.
 
 IMAGE_FILE_TYPES = ['jpg','png','jpeg']
@@ -83,3 +85,29 @@ def details(request,book_id):
 	}
 	template_name = 'lend/details.html'
 	return render(request, template_name, context )
+
+@login_required
+def approve(request,req_id):
+	book_requested = get_object_or_404(b_models.BookRequest, id=req_id)
+	if not request.user == book_requested.request_receiver:
+		return HttpResponse("You do not have permissions to authorize",status=403)
+	else:
+		book_requested.approved = True
+		book_requested.save()
+		book = book_requested.book_request
+		book.book_borrowable = False
+		book.save()
+		return redirect('inbox')
+
+@login_required
+def reject(request,req_id):
+	book_requested = get_object_or_404(b_models.BookRequest, id=req_id)
+	if not request.user == book_requested.request_receiver:
+		return HttpResponse("You do not have permissions to authorize",status=403)
+	else:
+		book_requested.approved = False
+		book_requested.save()
+		book = book_requested.book_request
+		book.book_borrowable = True
+		book.save()
+		return redirect('inbox')

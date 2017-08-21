@@ -25,4 +25,7 @@ urlpatterns = [
     url(r'^(?P<book_id>[0-9]+)/delete_book/$', views.delete_book, name='lend-book-delete'),
     url(r'^(?P<book_id>[0-9]+)/update_book/$', views.update_book, name='lend-book-update'),
     url(r'^(?P<book_id>[0-9]+)/$', views.details, name='lend-book-details'),
+
+    url(r'^approve/(?P<req_id>[0-9]+)/$', views.approve, name='lend-approve'),
+    url(r'^reject/(?P<req_id>[0-9]+)/$', views.reject, name='lend-reject'),
 ]

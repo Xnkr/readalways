@@ -1,0 +1,23 @@
+{{ user.username }} <br>
+incoming <br>
+{% for requests in incoming %}
+	{% if requests.approved is None %}
+		{{ requests.request_sender }} has requested you for the book <a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a> - <a href="{% url "lend:lend-approve" requests.id %}">Approve</a> - <a href="{% url "lend:lend-reject" requests.id %}">Reject</a>
+		{%elif requests.approved%}
+		You have approved <a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a> to {{ requests.request_sender }} - <a href="{% url "lend:lend-reject" requests.id %}">Reject</a>
+		{%else%}
+		You have rejected <a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a> to {{ requests.request_sender }}- <a href="{% url "lend:lend-approve" requests.id %}">Approve</a>
+	{% endif %}
+	<br>
+{% endfor %}
+<br>
+outgoing <br>
+{% for requests in outgoing %}
+	{% if requests.approved is None %}
+		Still waiting for {{ requests.request_receiver }} to approve <a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a><br>
+		{%elif requests.approved%}
+		{{ requests.request_receiver }} has approved <a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a>. Contact: {{ requests.request_receiver.email }}
+		{%else%}
+		{{ requests.request_receiver }} has rejected <a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a>. 
+	{% endif %}
+{% endfor %}

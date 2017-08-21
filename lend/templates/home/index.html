@@ -1,2 +1,8 @@
+{% if user.is_authenticated %}
+Welcome {{ user.username }} - <a href="{% url "account_logout" %}">Logout</a> - <a href="{% url "inbox" %}">Inbox</a>
+{%else%}
+{{ user }} - <a href="{% url "account_login" %}">Login</a> - <a href="{% url "account_signup" %}">Signup</a>
+{% endif %}
+<br>
 <a href="{% url 'lend:lend_home' %}"><button>lend</button></a>
 <a href="{% url 'borrow:borrow_home' %}"><button>borrow</button></a>

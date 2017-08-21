@@ -1,5 +1,4 @@
 {{ user.username }}
-
 <br>
 {% if not errors %}
 {{ book.book_name }}    <br>
@@ -10,12 +9,13 @@
         <li>{{ genre }}</li>
 {% endfor %}
 <img src="{{ book.book_cover.url }}" alt="" height="300">      
-
+{% if not requested and book.book_borrowable %}
 <form action="" method="post">
 	{% csrf_token %}
 	<button type="submit">Request for Book</button>
 	
 </form>
+{%endif%}
 {% else %}
 {{errors}}
 {% endif %}

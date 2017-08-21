@@ -27,8 +27,12 @@ class Category(models.Model):
 	DEFAULT_ID = 1
 	category_name = models.CharField(max_length=255, unique = True)
 
+	class Meta:
+		verbose_name_plural = "Categories"
+
 	def __str__(self):
 		return '%s' % (self.category_name)
+
 
 class Genre(models.Model):
 	genre = models.CharField(max_length=30, unique = True)
@@ -36,6 +40,8 @@ class Genre(models.Model):
 		return '%s' % (self.genre)
 
 class Book(models.Model):
+	class Meta:
+		verbose_name_plural = "Books"
 
 	path_and_rename = PathAndRename("covers/") 
 	
@@ -53,6 +59,7 @@ class Book(models.Model):
         verbose_name="Book Cover"
     )
 	book_edition = models.CharField(max_length=4)
+	book_borrowable = models.BooleanField(default=True)
 
 	def __str__(self):
 		return '%s - %s - %s' % (self.book_name,self.book_author,self.book_lender)
