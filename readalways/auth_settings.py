@@ -55,7 +55,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 # ACCOUNT_USER_DISPLAY
 
 # An integer specifying the minimum allowed length of a username.
-ACCOUNT_USERNAME_MIN_LENGTH = 5
+ACCOUNT_USERNAME_MIN_LENGTH = 4
 
 # The user is required to enter a username when signing up. Note that the
 # user will be asked to do so even if ACCOUNT_AUTHENTICATION_METHOD is set

@@ -64,11 +64,11 @@ def delete_book(request, book_id):
 @login_required
 def update_book(request,book_id):
 	instance = get_object_or_404(models.Book, id=book_id)
-	form = BookForm(request.POST or None, instance=instance)
+	form = BookForm(request.POST or None, request.FILES or None, instance=instance)
 	if form.is_valid():
 		form.save()
 		return redirect('lend:lend_home')
-	return direct_to_template(request, 'lend/create_book.html', {'form': form})
+	return render(request, 'lend/create_book.html', {'form': form})
 
 @login_required
 def details(request,book_id):

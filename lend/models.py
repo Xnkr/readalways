@@ -6,30 +6,38 @@ from django.contrib.auth.models import User
 import os
 from uuid import uuid4
 from django.urls import reverse
+from django.utils.deconstruct import deconstructible
+
+@deconstructible
+class PathAndRename(object):
+
+    def __init__(self, sub_path):
+        self.path = sub_path
+
+    def __call__(self, instance, filename):
+        ext = filename.split('.')[-1]
+        # set filename as random string
+        filename = '{}.{}'.format(uuid4().hex, ext)
+        # return the whole path to the file
+        return os.path.join(self.path, filename)
 
 # Create your models here.
 
 class Category(models.Model):
 	DEFAULT_ID = 1
-	category_name = models.CharField(max_length=255)
+	category_name = models.CharField(max_length=255, unique = True)
 
 	def __str__(self):
 		return '%s' % (self.category_name)
 
 class Genre(models.Model):
-	genre = models.CharField(max_length=30)
+	genre = models.CharField(max_length=30, unique = True)
 	def __str__(self):
 		return '%s' % (self.genre)
 
 class Book(models.Model):
 
-	def path_and_rename(path):
-		def wrapper(instance, filename):
-			ext = filename.split('.')[-1]
-			filename = '{}.{}'.format(uuid4().hex, ext)
-			# return the whole path to the file
-			return os.path.join(path, filename)
-		return wrapper	
+	path_and_rename = PathAndRename("covers/") 
 	
 	book_name = models.CharField(max_length = 255)
 	book_author = models.CharField(max_length = 255)
@@ -37,7 +45,7 @@ class Book(models.Model):
 	book_lender = models.ForeignKey(User, on_delete = models.CASCADE)
 	book_genre = models.ManyToManyField(Genre, blank=True)
 	book_cover = models.ImageField(
-        upload_to=path_and_rename('covers/'),
+        upload_to=path_and_rename,
         null=False,
         blank=False,
         editable=True,

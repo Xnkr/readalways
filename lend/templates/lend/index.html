@@ -3,7 +3,7 @@ Hello {{ name.username }}
 Books you are lending
 <br>
 {% for book in books %}
-{{ book }}
+<a href="{% url 'lend:lend-book-details' book.id %}">{{ book }}</a>&nbsp;<a href="{% url "lend:lend-book-update" book.id %}">edit</a>&nbsp;<a href="{% url "lend:lend-book-delete" book.id %}">delete</a>
 <br>	
 {% endfor %}
 

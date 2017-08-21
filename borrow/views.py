@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from lend import models
@@ -19,3 +18,15 @@ def home(request):
 		'books': books,
 	}
 	return render(request, template_name, context)
+
+@login_required
+def details(request,book_id):
+	book = get_object_or_404(models.Book, id=book_id)
+	errors = ""
+	context = {
+		'book':book,
+		'user':request.user,
+		'errors': errors,
+	}
+	template_name = 'borrow/details.html'
+	return render(request, template_name, context )
