@@ -1,4 +1,12 @@
+{% extends "home/base.html" %}
+{% block title %}
+    ReadAlways
+{% endblock title %}
+
+{% block body %}
+    
 {% if user.is_authenticated %}
+<div class="container">
 Welcome {{ user.username }} - <a href="{% url "account_logout" %}">Logout</a> - <a href="{% url "inbox" %}">Inbox</a>
 {%else%}
 {{ user }} - <a href="{% url "account_login" %}">Login</a> - <a href="{% url "account_signup" %}">Signup</a>
@@ -6,3 +14,5 @@ Welcome {{ user.username }} - <a href="{% url "account_logout" %}">Logout</a> - 
 <br>
 <a href="{% url 'lend:lend_home' %}"><button>lend</button></a>
 <a href="{% url 'borrow:borrow_home' %}"><button>borrow</button></a>
+</div>
+{% endblock body %}
