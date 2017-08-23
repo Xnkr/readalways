@@ -1,0 +1,49 @@
+.lend-button{
+	background: rgb(102, 153, 204);
+}
+.lend-button:hover, .borrow-button:hover {
+	background-color: rgb(251, 219, 101);
+	cursor: pointer;
+}
+.borrow-button{
+	background: rgb(153, 204, 153);
+}
+.text-in-button{
+	color: #fff;
+	font-size: 50px;
+	margin-top: 50%;
+	margin-bottom: 45%;
+   -webkit-text-stroke-width: 1px;
+   -webkit-text-stroke-color: black;
+   padding-left: 35%;
+
+}
+.font-brand{
+    font-family: 'Dancing Script', cursive;
+}
+.font-title{
+	font-family: 'Petit Formal Script', cursive;
+}
+.font-body{
+	font-family: 'Comfortaa', cursive;
+}
+.main-title{
+	font-size: 50px;
+}
+.home {
+  text-decoration: none;
+}
+body{
+	background: white url('../images/bg.jpg');
+	background-size: cover;
+}
+.navbar{
+	border-radius: 0;
+}
+
+@media(min-width: 768px) {
+  .field-label-responsive {
+    padding-top: .5rem;
+    text-align: right;
+  }
+}

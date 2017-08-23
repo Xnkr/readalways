@@ -4,51 +4,65 @@
 		<meta charset="UTF-8">
 	<title>{% block title %}{% endblock title %}</title>
 	{% load staticfiles %}
+	{% load account %}
 	<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	<link rel="stylesheet" href="{% static 'css/font-awesome.css' %}">
 	<link rel="stylesheet" href="{% static 'css/style.css' %}">
 	<script src="{% static 'js/jquery-3.2.1.js' %}"></script>
 	<script src="{% static 'js/popper.js' %}"></script>
-	<script src="{% static 'js/popper-utils.js' %}"></script>
 	<script src="{% static 'js/bootstrap.js' %}"></script>
 	<script src="{% static 'js/script.js' %}"></script>
+	<link href="https://fonts.googleapis.com/css?family=Comfortaa|Dancing+Script|Petit+Formal+Script" rel="stylesheet">
 </head>
 <body>
 	<nav class="navbar navbar-dark bg-dark navbar-expand-sm">
-		<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#topNavBar">&#x2630;</button>	<a href="{% url 'home' %}" class="navbar-brand">ReadAlways</a>
+		<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#topNavBar">&#x2630;</button>	<a href="{% url 'home' %}" class="navbar-brand font-brand">ReadAlways</a>
 		<div class="collapse navbar-collapse" id="topNavBar">
 			<ul class="nav navbar-nav">
 				<li class="nav-item">
 					<a href="{% url 'lend:lend_home' %}" class="nav-link">
-						<span class="glyphicon glyphicon-gift" aria-hidden="true"></span>
+						<i class="fa fa-gift" aria-hidden="true"></i>
 						Lend
 					</a>
 				</li>
 				<li class="nav-item">
-					<a href="borrow:borrow_home" class="nav-link">
-						<span class="glyphicons glyphicons-book-open" aria-hidden="true"></span>
+					<a href="{% url 'borrow:borrow_home' %}" class="nav-link">
+						<i class="fa fa-book" aria-hidden="true"></i>
 						Borrow
 					</a>
 				</li>
 			</ul>
-			<form class="form-inline my-5 my-lg-0" method="get">
-				<input class="form-control mr-sm-2" type="text" placeholder="Search" name="q">
-				<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-			</form>
 			<ul class="nav navbar-nav ml-auto">
 				{% if user.is_authenticated %}
-					<li class="nav-item">	<a href="#" class="nav-link">
-						<span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>
-						Logout
-					</a>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" id="userActions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<i class="fa fa-user-circle" aria-hidden="true"></i>
+							{% user_display user %}
+						</a>
+						<div class="dropdown-menu" aria-labelledby="userActions">
+							<a class="dropdown-item" href="{% url 'account_change_password' %}">Change Password</a>
+							<a class="dropdown-item" href="{% url 'account_reset_password' %}">Forgot Password</a>
+							<a class="dropdown-item" href="{% url 'account_email' %}">Change Email</a>
+						</div>
+					</li>
+					<li class="nav-item">	<a href="{% url 'inbox' %}" class="nav-link">
+						<i class="fa fa-envelope" aria-hidden="true"></i>
+					Inbox</a>
 				</li>
-				{%else%}
-				<li class="nav-item">	<a href="{% url 'account_login' %}" class="nav-link">
-					<span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>
-					Login
+				<li class="nav-item">	<a href="{% url 'account_logout' %}" class="nav-link">
+					<i class="fa fa-sign-out" aria-hidden="true"></i>
+					Logout
 				</a>
 			</li>
-			<li class="nav-item">	<a href="{% url 'account_signup' %}" class="nav-link">
-				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			{%else%}
+			<li class="nav-item">	<a href="{% url 'account_login' %}" class="nav-link">
+				<i class="fa fa-sign-in" aria-hidden="true"></i>
+				Login
+			</a>
+		</li>
+		<li class="nav-item">
+			<a href="{% url 'account_signup' %}" class="nav-link">
+				<i class="fa fa-user-plus" aria-hidden="true"></i>
 				Signup
 			</a>
 		</li>

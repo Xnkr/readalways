@@ -1,4 +1,12 @@
-{{ user.username }} <br>
+{% extends "home/base.html" %}
+
+{% block title %}Inbox{% endblock %}
+
+{% block body %}
+<div class="container">
+<div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
 incoming <br>
 {% for requests in incoming %}
 	{% if requests.approved is None %}
@@ -21,3 +29,7 @@ outgoing <br>
 		{{ requests.request_receiver }} has rejected <a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a>. 
 	{% endif %}
 {% endfor %}
+</div>
+</div>
+</div>
+{% endblock %}

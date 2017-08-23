@@ -1,15 +1,26 @@
-{{ user.username }}
-
-<br>
-{% if not errors %}
-{{ book.book_name }}    <br>
-{{ book.book_author }} <br>
-{{ book.book_lender }}  <br>
-{{ book.book_category }} <br>
-{% for genre in book.book_genre.all %}
-        <li>{{ genre }}</li>
-{% endfor %}
-<img src="{{ book.book_cover.url }}" alt="" height="300">      
-{% else %}
-{{errors}}
-{% endif %}
+{% extends "home/base.html" %}
+{% block title %}{% if not errors %}{{ book.book_name }}{% else %}Error{% endif %}{% endblock %}
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-3"></div>
+			<div class="col-md-6">
+				
+				{{ user.username }}
+				<br>
+				{% if not errors %}
+					{{ book.book_name }}    <br>
+					{{ book.book_author }} <br>
+					{{ book.book_lender }}  <br>
+					{{ book.book_category }} <br>
+					{% for genre in book.book_genre.all %}
+						<li>{{ genre }}</li>
+					{% endfor %}
+					<img src="{{ book.book_cover.url }}" alt="" height="300">
+				{% else %}
+					{{errors}}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
