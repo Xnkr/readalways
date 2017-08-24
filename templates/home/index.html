@@ -1,31 +1,27 @@
-{% extends "home/base.html" %}
-{% block title %}
-	ReadAlways
-{% endblock title %}
-{% block body %}
-	<div class="container">
-		<script type="text/javascript">
-				$(document).on('click', '.lend-button', function () {
-		var url = "{% url 'lend:lend_home' %}";
-		document.location.href = url;
-		});
-				$(document).on('click', '.borrow-button', function () {
-		var url = "{% url 'borrow:borrow_home' %}";
-		document.location.href = url;
-		});
-		</script>
-		<div class="row">
-			<div class="col-lg ml-2 mx-auto font-title main-title">Choose a section</div>
+{% extends "home/base.html" %} {% block title %} ReadAlways {% endblock title %} {% block body %}
+<div class="container">
+    <script type="text/javascript">
+    $(document).on('click', '.lend-button', function() {
+        var url = "{% url 'lend:lend_home' %}";
+        document.location.href = url;
+    });
+    $(document).on('click', '.borrow-button', function() {
+        var url = "{% url 'borrow:borrow_home' %}";
+        document.location.href = url;
+    });
+    </script>
+    <div class="row">
+        <div class="col-lg ml-2 mx-auto font-title main-title">Choose</div>
+    </div>
+    <div class="row">
+        <span class="col-md-6 lend-button">
+		<div class="text-in-button font-body home">To Lend
 		</div>
-		<div class="row">
-			<span class="col-md-6 lend-button">
-				<div class="text-in-button font-body home">Lend
-				</div>
-			</span>
-			<span class="col-md-6 borrow-button">
-				<div class="text-in-button font-body home">Borrow
-				</div>
-			</span>
+	</span>
+        <span class="col-md-6 borrow-button">
+		<div class="text-in-button font-body home">To Borrow
 		</div>
-	</div>
+	</span>
+    </div>
+</div>
 {% endblock body %}

@@ -1,35 +1,64 @@
 {% extends "home/base.html" %}
-
 {% block title %}Inbox{% endblock %}
-
 {% block body %}
-<div class="container">
-<div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-6">
-incoming <br>
-{% for requests in incoming %}
-	{% if requests.approved is None %}
-		{{ requests.request_sender }} has requested you for the book <a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a> - <a href="{% url "lend:lend-approve" requests.id %}">Approve</a> - <a href="{% url "lend:lend-reject" requests.id %}">Reject</a>
-		{%elif requests.approved%}
-		You have approved <a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a> to {{ requests.request_sender }} - <a href="{% url "lend:lend-reject" requests.id %}">Reject</a>
-		{%else%}
-		You have rejected <a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a> to {{ requests.request_sender }}- <a href="{% url "lend:lend-approve" requests.id %}">Approve</a>
-	{% endif %}
-	<br>
-{% endfor %}
-<br>
-outgoing <br>
-{% for requests in outgoing %}
-	{% if requests.approved is None %}
-		Still waiting for {{ requests.request_receiver }} to approve <a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a><br>
-		{%elif requests.approved%}
-		{{ requests.request_receiver }} has approved <a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a>. Contact: {{ requests.request_receiver.email }}
-		{%else%}
-		{{ requests.request_receiver }} has rejected <a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a>. 
-	{% endif %}
-{% endfor %}
-</div>
-</div>
-</div>
+	<div class="container">
+		<div class="main-title font-title my-1">Incoming Requests</div>
+		<div class="card">
+		<table class="inbox-table table-hover table-bordered">
+			<thead class="table-info">
+				<th>Request From</th>
+				<th>Book</th>
+				<th>Approve</th>
+				<th>Reject</th>
+			</thead>
+			<tbody>
+			{% for requests in incoming %}
+				<tr>
+					<td>{{ requests.request_sender }}</td>
+					<td><a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a></td>
+					<td>{%if not requests.approved%}<a href="{% url "lend:lend-approve" requests.id %}" class="approve"><i class="fa fa-check"></i></a>{% endif %}</td>
+					<td>{%if requests.approved or requests.approved is none %}<a href="{% url "lend:lend-reject" requests.id %}" class="reject"><i class="fa fa-close"></i></a>{% endif %}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+		</table>
+		</div>
+		<div class="main-title font-title my-1">Pending Requests</div>
+		<div class="card">
+			<table class="inbox-table table-bordered table-hover">
+				<thead class="table-info">
+					<th>Book</th>
+					<th>Lender</th>
+					<th>Quick Status</th>
+					<th>Details</th>
+				</thead>
+				<tbody>
+				{% for requests in outgoing %}
+					<tr>
+						<td><a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a></td>
+						<td>{{ requests.request_receiver }}</td>
+						<td>
+						{% if requests.approved is None %} 
+						<span class="text-warning">Pending</span> 
+						{%elif requests.approved%}
+						<span class="text-success">Approved</span>
+						{%else%}
+						<span class="text-danger">Rejected</span>
+						{% endif %}
+						</td>
+						<td>
+						{% if requests.approved is None %} 
+						<span class="text-warning">Request Pending</span> 
+						{%elif requests.approved%}
+						<span class="text-success">Contact <strong>{{ requests.request_receiver }}</strong> through <a href="mailto:{{ requests.request_receiver.email }}"><strong>{{ requests.request_receiver.email }}</strong></a> for the exchange.</span>
+						{%else%}
+						<span class="text-danger"><strong>{{ requests.request_receiver }}</strong> has rejected your request for the book.</span>
+						{% endif %}
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
 {% endblock %}
