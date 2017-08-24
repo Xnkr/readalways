@@ -16,7 +16,7 @@ IMAGE_FILE_TYPES = ['jpg','png','jpeg']
 class BookForm(forms.ModelForm):
 	class Meta:
 		model = models.Book
-		fields = ['book_name','book_author','book_category','book_genre','book_cover']
+		fields = ['book_name','book_author','book_category','book_genre','book_cover','book_edition']
 
 
 @login_required
@@ -24,7 +24,7 @@ def home(request):
 	template_name = 'lend/index.html'
 	books = models.Book.objects.filter(book_lender=request.user.pk)
 	context = {
-		'name': request.user,
+		'user': request.user,
 		'books' : books,
 	}
 	return render(request, template_name, context)
@@ -58,7 +58,7 @@ def delete_book(request, book_id):
     book.delete()
     books = models.Book.objects.filter(book_lender=request.user.pk)
     context = {
-				'name': request.user,
+				'user': request.user,
 				'books' : models.Book.objects.filter(book_lender=request.user.pk),
 			}
     return render(request, 'lend/index.html', context)

@@ -14,7 +14,7 @@ def home(request):
 	template_name = 'borrow/index.html'
 	# return HttpResponse(string)
 	context = {
-		'name': request.user.username,
+		'user': request.user,
 		'books': books,
 	}
 	return render(request, template_name, context)

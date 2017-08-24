@@ -4,24 +4,30 @@
 	<div class="container">
 		<div class="main-title font-title my-1">Incoming Requests</div>
 		<div class="card">
-		<table class="inbox-table table-hover table-bordered">
-			<thead class="table-info">
-				<th>Request From</th>
-				<th>Book</th>
-				<th>Approve</th>
-				<th>Reject</th>
-			</thead>
-			<tbody>
-			{% for requests in incoming %}
-				<tr>
-					<td>{{ requests.request_sender }}</td>
-					<td><a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a></td>
-					<td>{%if not requests.approved%}<a href="{% url "lend:lend-approve" requests.id %}" class="approve"><i class="fa fa-check"></i></a>{% endif %}</td>
-					<td>{%if requests.approved or requests.approved is none %}<a href="{% url "lend:lend-reject" requests.id %}" class="reject"><i class="fa fa-close"></i></a>{% endif %}</td>
-				</tr>
-			{% endfor %}
-			</tbody>
-		</table>
+			<table class="inbox-table table-hover table-bordered">
+				<thead class="table-info">
+					<th>Request From</th>
+					<th>Book</th>
+					<th>Approve</th>
+					<th>Reject</th>
+				</thead>
+				<tbody>
+					{% ifnotequal incoming|length 0 %}
+						
+						{% for requests in incoming %}
+							<tr>
+								<td>{{ requests.request_sender }}</td>
+								<td><a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a></td>
+								<td>{%if not requests.approved%}<a href="{% url "lend:lend-approve" requests.id %}" class="approve"><i class="fa fa-check"></i></a>{% endif %}</td>
+								<td>{%if requests.approved or requests.approved is none %}<a href="{% url "lend:lend-reject" requests.id %}" class="reject"><i class="fa fa-close"></i></a>{% endif %}</td>
+							</tr>
+						{% endfor %}
+						
+						{%else%}
+						<td colspan="4">No Requests Found</td>
+					{% endifnotequal %}
+				</tbody>
+			</table>
 		</div>
 		<div class="main-title font-title my-1">Pending Requests</div>
 		<div class="card">
@@ -33,30 +39,34 @@
 					<th>Details</th>
 				</thead>
 				<tbody>
-				{% for requests in outgoing %}
-					<tr>
-						<td><a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a></td>
-						<td>{{ requests.request_receiver }}</td>
-						<td>
-						{% if requests.approved is None %} 
-						<span class="text-warning">Pending</span> 
-						{%elif requests.approved%}
-						<span class="text-success">Approved</span>
+					{% ifnotequal outgoing|length 0 %}
+						{% for requests in outgoing %}
+							<tr>
+								<td><a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a></td>
+								<td>{{ requests.request_receiver }}</td>
+								<td>
+									{% if requests.approved is None %}
+										<span class="text-warning">Pending</span>
+										{%elif requests.approved%}
+										<span class="text-success">Approved</span>
+										{%else%}
+										<span class="text-danger">Rejected</span>
+									{% endif %}
+								</td>
+								<td>
+									{% if requests.approved is None %}
+										<span class="text-warning">Request Pending</span>
+										{%elif requests.approved%}
+										<span class="text-success">Contact <strong>{{ requests.request_receiver }}</strong> through <a href="mailto:{{ requests.request_receiver.email }}"><strong>{{ requests.request_receiver.email }}</strong></a> for the exchange.</span>
+										{%else%}
+										<span class="text-danger"><strong>{{ requests.request_receiver }}</strong> has rejected your request for the book.</span>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
 						{%else%}
-						<span class="text-danger">Rejected</span>
-						{% endif %}
-						</td>
-						<td>
-						{% if requests.approved is None %} 
-						<span class="text-warning">Request Pending</span> 
-						{%elif requests.approved%}
-						<span class="text-success">Contact <strong>{{ requests.request_receiver }}</strong> through <a href="mailto:{{ requests.request_receiver.email }}"><strong>{{ requests.request_receiver.email }}</strong></a> for the exchange.</span>
-						{%else%}
-						<span class="text-danger"><strong>{{ requests.request_receiver }}</strong> has rejected your request for the book.</span>
-						{% endif %}
-						</td>
-					</tr>
-					{% endfor %}
+						<td colspan="4">No Requests Found</td>
+					{% endifnotequal %}
 				</tbody>
 			</table>
 		</div>

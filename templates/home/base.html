@@ -18,6 +18,9 @@
 {% url 'lend:lend_home' as lend_home %}
 {% url 'borrow:borrow_home' as borrow_home %}
 {% url 'inbox' as inbox %}
+{% url 'account_login' as account_login %}
+{% url 'account_logout' as account_logout %}
+{% url 'account_signup' as account_signup %}
 	<nav class="navbar navbar-dark bg-dark navbar-expand-sm mb-2">
 		<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#topNavBar">&#x2630;</button>	<a href="{% url 'home' %}" class="navbar-brand font-brand">ReadAlways</a>
 		<div class="collapse navbar-collapse" id="topNavBar">
@@ -52,19 +55,19 @@
 						<i class="fa fa-envelope" aria-hidden="true"></i>
 					Inbox</a>
 				</li>
-				<li class="nav-item">	<a href="{% url 'account_logout' %}" class="nav-link">
+				<li class="nav-item {% if request.path == account_logout %}active{% endif %}">	<a href="{{account_logout}}" class="nav-link">
 					<i class="fa fa-sign-out" aria-hidden="true"></i>
 					Logout
 				</a>
 			</li>
 			{%else%}
-			<li class="nav-item">	<a href="{% url 'account_login' %}" class="nav-link">
+			<li class="nav-item {% if request.path == account_login %}active{% endif %}">	<a href="{{account_login}}" class="nav-link" data-toggle="modal" data-target="#loginModal">
 				<i class="fa fa-sign-in" aria-hidden="true"></i>
 				Login
 			</a>
 		</li>
-		<li class="nav-item">
-			<a href="{% url 'account_signup' %}" class="nav-link">
+		<li class="nav-item {% if request.path == account_signup %}active{% endif %}">
+			<a href="{{account_signup}}" class="nav-link">
 				<i class="fa fa-user-plus" aria-hidden="true"></i>
 				Signup
 			</a>
@@ -75,5 +78,18 @@
 </nav>
 {% block body %}
 {% endblock body %}
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        {% include "account/form_login.html" %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

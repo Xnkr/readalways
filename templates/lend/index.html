@@ -1,20 +1,52 @@
 {% extends "home/base.html" %}
 {% block title %}Lend{% endblock %}
 {% block body %}
-	<div class="container">
-		<div class="row">
-			<div class="col-md-3"></div>
-			<div class="col-md-6">
-				Hello {{ name.username }}
-				<br>
-				Books you are lending
-				<br>
-				{% for book in books %}
-					<a href="{% url 'lend:lend-book-details' book.id %}">{{ book }}</a>&nbsp;<a href="{% url "lend:lend-book-update" book.id %}">edit</a>&nbsp;<a href="{% url "lend:lend-book-delete" book.id %}">delete</a>
-					<br>
-				{% endfor %}
-				<a href="add">add book</a>
+
+<div class="container">
+<div class="row">
+	{% if books %}
+		{% for book in books %}
+			<div class="card card-body mx-0 my-3 col-md-4">
+				<div class="media">
+					<a class="float-left" href="{% url 'lend:lend-book-details' book.id %}">
+						<img class="media-object mx-2" src="{{ book.book_cover.url }}" height="300">
+					</a>
+					<div class="media-body">
+						<h4>{{ book.book_name }}</h4>
+						<h5>By {{ book.book_author }}</h5>
+						<h6><strong>Category: </strong>{{ book.book_category }}</h6>
+						<h6><strong>Genre: </strong>
+					{% for genre in book.book_genre.all %}					
+						{{ genre }}{% if forloop.counter < book.book_genre.all|length %},{% endif %}
+
+					{% endfor %}
+					{% if book.book_edition %}
+					<h6><strong>Edition:</strong>{{book.book_edition}}</h6>  
+					
+					{% endif %}
+						<ul class="list-inline list-unstyled my-2">
+						<li class="list-inline-item"><a href="{% url 'lend:lend-book-update' book.id %}"
+							class="btn btn-warning btn-sm">
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						</a></li>
+						<li class="list-inline-item"><a href="{% url 'lend:lend-book-delete' book.id %}" class="btn btn-danger btn-sm delete">
+							<i class="fa fa-trash" aria-hidden="true"></i>
+						</a></li>
+						<li class="list-inline-item"><a href="#" class="btn btn-info btn-sm btn-favorite" data-toggle="tooltip" id="borrowable" data-placement="bottom" title="The book is {% if not book.book_borrowable %}not{% endif %} borrowable.">
+							<i class="fa fa-star{% if not book.book_borrowable %}-o{% endif %}"></i>
+						</a></li>
+
+					</ul>
+				</div>
 			</div>
 		</div>
-	</div>
+	{% endfor %}
+{% else %}
+{{errors}}
+{% endif %}
+</div>
+</div>
+<div class="container">
+	<a href="{% url 'lend:lend-book-add' %}"><button class="btn btn-success btn-lg"><i class="fa fa-plus"></i> Add Book</button></a>
+</div>
 {% endblock %}
