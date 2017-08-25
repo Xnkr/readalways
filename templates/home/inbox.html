@@ -2,6 +2,18 @@
 {% block title %}Inbox{% endblock %}
 {% block body %}
 	<div class="container">
+	{% if messages %}
+			<div class="alert alert-danger" role="alert">
+				<ul class="messages">
+					{% for message in messages %}
+						<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+						{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} <strong>Error:</strong> {% endif %}
+						{{ message }}
+						</li>
+					{% endfor %}
+				</ul>
+			</div>
+		{% endif %}
 		<div class="main-title font-title my-1">Incoming Requests</div>
 		<div class="card">
 			<table class="inbox-table table-hover table-bordered">

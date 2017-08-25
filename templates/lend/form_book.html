@@ -1,0 +1,121 @@
+{% url 'lend:lend_home' as home %}
+{% url 'lend:lend-book-add' as add %}
+{% url 'lend:lend-book-update' as update %}
+<form action="" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<h2 class="font-title" style="text-align: center;">
+			{% if request.path == add or request.path == home  %}
+				Add a Book
+				{% elif request.path == update %}
+				Edit
+			{% endif %}
+			</h2>
+			<hr>
+			{% if form.errors %}
+				{% for field in form %}
+					{% for error in field.errors %}
+						<div class="alert alert-danger" role="alert">
+							<strong>{{ error|escape }}</strong>
+						</div>
+					{% endfor %}
+				{% endfor %}
+				{% for error in form.non_field_errors %}
+					<div class="alert alert-danger" role="alert">
+						<strong>{{ error|escape }}</strong>
+					</div>
+				{% endfor %}
+			{% endif %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="form-group has-danger">
+				<label  for="{{ form.book_name.id_for_label }}"><strong>Book Title</strong></label>
+				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+					<input type="text" name="book_name" class="form-control" id="{{ form.book_name.id_for_label }}"
+					placeholder="Book Title" {% if form.book_name.value %} value="{{ form.book_name.value }}" {% endif %} required autofocus>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="form-group has-danger">
+				<label  for="{{ form.book_author.id_for_label }}"><strong>Author</strong></label>
+				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+					<input type="text" name="book_author" class="form-control" id="{{ form.book_author.id_for_label }}"
+					placeholder="Author" {% if form.book_author.value %} value="{{ form.book_author.value }}" {% endif %} required autofocus>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="form-group has-danger">
+				<label for="{{ form.book_category.id_for_label }}"><strong>Category</strong></label>
+				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+					<select class="form-control" name="book_category" id="id_book_category">
+						{% for choice in form.book_category  %}
+							{{ choice }}
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="form-group has-danger">
+				<label  for="{{ form.book_genre.id_for_label }}"><strong>Genre</strong></label>
+				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+					<select class="form-control" name="book_genre" required multiple="multiple" id="id_book_genre">
+						{% for choice in form.book_genre  %}
+							{{ choice }}
+						{% endfor %}
+					</select>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="form-group has-danger">
+				<label  for="{{ form.book_cover.id_for_label }}"><strong>Book Cover</strong></label>
+				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+					{% if form.book_cover.value %}
+						<div class="card bg-dark text-white mx-1 px-1 pb-1">
+							<strong>Currently:</strong>
+							<img src="{{form.book_cover.value.url }}"  height="200">
+						</div>
+					{% endif %}
+					<input class="form-control" type="file" name="book_cover"  {% if not form.book_cover.value %} required {% endif %} id="id_book_cover" />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<div class="form-group has-danger">
+				<label  for="{{ form.book_edition.id_for_label }}"><strong>Book Edition</strong></label>
+				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
+					<input class="form-control" type="text" name="book_edition" required id="id_book_edition" maxlength="4" {% if form.book_edition.value %} value="{{ form.book_edition.value }}" {% endif %}  />
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3"></div>
+		<div class="col-md-6">
+			<button type="submit" class="btn btn-success"><i class="fa fa-plus">&nbsp;</i>Submit</button>
+		</div>
+	</div>
+</form>
