@@ -49,7 +49,7 @@ class Book(models.Model):
 	book_author = models.CharField(max_length = 255)
 	book_category = models.ForeignKey(Category, on_delete=models.SET_DEFAULT, default=Category.DEFAULT_ID)
 	book_lender = models.ForeignKey(User, on_delete = models.CASCADE)
-	book_genre = models.ManyToManyField(Genre)
+	book_genre = models.ManyToManyField(Genre, blank=True)
 	book_cover = models.ImageField(
         upload_to=path_and_rename,
         null=False,
@@ -58,7 +58,7 @@ class Book(models.Model):
         help_text="Book Cover",
         verbose_name="Book Cover"
     )
-	book_edition = models.CharField(max_length=4)
+	book_edition = models.CharField(max_length=4, blank=True)
 	book_borrowable = models.BooleanField(default=True)
 
 	def __str__(self):

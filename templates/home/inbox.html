@@ -2,18 +2,22 @@
 {% block title %}Inbox{% endblock %}
 {% block body %}
 	<div class="container">
-	{% if messages %}
-			<div class="alert alert-danger" role="alert">
-				<ul class="messages">
-					{% for message in messages %}
-						<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-						{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} <strong>Error:</strong> {% endif %}
-						{{ message }}
-						</li>
-					{% endfor %}
-				</ul>
-			</div>
-		{% endif %}
+		{% if messages %}
+			
+			{% for message in messages %}
+				{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+					<div class="alert alert-danger {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+					{{ message }}
+				</div>
+				{% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+				<div class="alert alert-success {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+					{{ message }}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+</div>
+	<div class="container">
 		<div class="main-title font-title my-1">Incoming Requests</div>
 		<div class="card">
 			<table class="inbox-table table-hover table-bordered">
@@ -29,7 +33,7 @@
 						{% for requests in incoming %}
 							<tr>
 								<td>{{ requests.request_sender }}</td>
-								<td><a href="{% url "lend:lend-book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#bookModal" data-book-id="{{requests.book_request.id}}">{{ requests.book_request.book_name }}</a></td>
 								<td>{%if not requests.approved%}<a href="{% url "lend:lend-approve" requests.id %}" class="approve"><i class="fa fa-check"></i></a>{% endif %}</td>
 								<td>{%if requests.approved or requests.approved is none %}<a href="{% url "lend:lend-reject" requests.id %}" class="reject"><i class="fa fa-close"></i></a>{% endif %}</td>
 							</tr>
@@ -54,7 +58,7 @@
 					{% ifnotequal outgoing|length 0 %}
 						{% for requests in outgoing %}
 							<tr>
-								<td><a href="{% url "borrow:book-details" requests.book_request.id %}">{{ requests.book_request.book_name }}</a></td>
+								<td><a href="#" data-toggle="modal" data-target="#bookModal" data-book-id="{{requests.book_request.id}}">{{ requests.book_request.book_name }}</a></td>
 								<td>{{ requests.request_receiver }}</td>
 								<td>
 									{% if requests.approved is None %}
@@ -84,3 +88,25 @@
 		</div>
 	</div>
 {% endblock %}
+
+{% block modal %}
+
+<div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookModalLabel">T</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="book_desc"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock modal %}

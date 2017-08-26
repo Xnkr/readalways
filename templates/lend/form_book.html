@@ -1,13 +1,33 @@
 {% url 'lend:lend_home' as home %}
 {% url 'lend:lend-book-add' as add %}
 {% url 'lend:lend-book-update' as update %}
+<script type="text/javascript">
+$(document).ready(function() {
+    var option = $("#id_book_category").val();
+    function addForm(option){
+    	htmlString = "";
+    	if (option == 2) {
+            htmlString += '<div class="row"><div class="col-md-3"></div><div class="col-md-6"><div class="form-group has-danger">   <label  for="{{ form.book_genre.id_for_label }}"><strong>Genre</strong></label>               <div class="input-group mb-2 mr-sm-2 mb-sm-0">                    <select class="form-control" name="book_genre" multiple="multiple" required="required" id="id_book_genre">                        {% for choice in form.book_genre  %}                            {{ choice }}                        {% endfor %}                    </select>                </div>            </div>        </div>    </div>';
+        }
+        if (option == 3) {
+            htmlString += '<div class="row">        <div class="col-md-3"></div>        <div class="col-md-6">            <div class="form-group has-danger">                <label  for="{{ form.book_edition.id_for_label }}"><strong>Book Edition</strong></label>                <div class="input-group mb-2 mr-sm-2 mb-sm-0">                    <input class="form-control" type="text" required name="book_edition" id="id_book_edition" maxlength="4" {% if form.book_edition.value %}  value="{{ form.book_edition.value }}" {% endif %}  />                </div>            </div>        </div>    </div>';
+        }
+    	return htmlString;
+    }
+    $("#id_book_category").change(function() {
+        var option = $(this).val();        
+        $("#addForm").html(addForm(option));
+    })
+    $("#addForm").html(addForm(option));
+});
+</script>
 <form action="" method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	<div class="row">
 		<div class="col-md-3"></div>
 		<div class="col-md-6">
 			<h2 class="font-title" style="text-align: center;">
-			{% if request.path == add or request.path == home  %}
+			{% if request.path == add %}
 				Add a Book
 				{% elif request.path == update %}
 				Edit
@@ -69,21 +89,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-3"></div>
-		<div class="col-md-6">
-			<div class="form-group has-danger">
-				<label  for="{{ form.book_genre.id_for_label }}"><strong>Genre</strong></label>
-				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
-					<select class="form-control" name="book_genre" required multiple="multiple" id="id_book_genre">
-						{% for choice in form.book_genre  %}
-							{{ choice }}
-						{% endfor %}
-					</select>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div id="addForm"></div>
+	
 	<div class="row">
 		<div class="col-md-3"></div>
 		<div class="col-md-6">
@@ -101,17 +108,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-md-3"></div>
-		<div class="col-md-6">
-			<div class="form-group has-danger">
-				<label  for="{{ form.book_edition.id_for_label }}"><strong>Book Edition</strong></label>
-				<div class="input-group mb-2 mr-sm-2 mb-sm-0">
-					<input class="form-control" type="text" name="book_edition" required id="id_book_edition" maxlength="4" {% if form.book_edition.value %} value="{{ form.book_edition.value }}" {% endif %}  />
-				</div>
-			</div>
-		</div>
-	</div>
+	
 	<div class="row">
 		<div class="col-md-3"></div>
 		<div class="col-md-6">

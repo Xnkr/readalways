@@ -1,5 +1,7 @@
 {% extends "home/base.html" %}
-
-{% block body %}
-    {% include "lend/form_book.html" %}
-{% endblock body %}
+{% url "lend:lend-book-add"  as book_add %}
+{% if request.path == book_add %}
+	{% block body %}
+		{% include "lend/form_book.html" %}
+	{% endblock body %}
+{% endif %}

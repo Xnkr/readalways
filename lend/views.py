@@ -38,6 +38,7 @@ def create_book(request):
         book = form.save(commit=False)
         book.book_lender = request.user
         book.book_cover = request.FILES['book_cover']
+        selected_cat = form.cleaned_data['book_category']
         file_type = book.book_cover.url.split('.')[-1]
         file_type = file_type.lower()
         if file_type not in IMAGE_FILE_TYPES:
@@ -47,7 +48,10 @@ def create_book(request):
                 'error_message': 'Image file must be PNG, JPG, or JPEG',
             }
             return render(request, 'lend/create_book.html', context)
-        book.save()
+        book.save()        
+        if form.cleaned_data['book_genre']:
+        	book.book_genre = form.cleaned_data['book_genre']
+        	book.save()
         return redirect('lend:lend_home')
     context = {
         "form": form,
@@ -82,19 +86,6 @@ def update_book(request,book_id):
 		messages.error(request, 'You cannot edit what you did not add.')
     	return redirect('lend:lend_home')
 
-@login_required
-def details(request,book_id):
-	book = get_object_or_404(models.Book, id=book_id)
-	errors = ""
-	if not book.book_lender == request.user:
-		errors = "You did not lend this book. Visit the borrower section"
-	context = {
-		'book':book,
-		'user':request.user,
-		'errors': errors,
-	}
-	template_name = 'lend/details.html'
-	return render(request, template_name, context )
 
 @login_required
 def approve(request,req_id):
@@ -107,6 +98,7 @@ def approve(request,req_id):
 		book = book_requested.book_request
 		book.book_borrowable = False
 		book.save()
+		messages.success(request, 'Request has been approved. Your E-Mail is now visible to the requester.')
 	return redirect('inbox')
 
 @login_required
@@ -120,4 +112,5 @@ def reject(request,req_id):
 		book = book_requested.book_request
 		book.book_borrowable = True
 		book.save()
+		messages.success(request, 'Request has been rejected.')
 	return redirect('inbox')

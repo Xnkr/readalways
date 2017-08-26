@@ -1,83 +1,76 @@
 {% extends "home/base.html" %}
 {% block title %}Lend{% endblock %}
 {% block body %}
-
 	<div class="container">
 		{% if messages %}
-			<div class="alert alert-danger" role="alert">
-				<ul class="messages">
-					{% for message in messages %}
-						<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
-						{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %} <strong>Error:</strong> {% endif %}
-						{{ message }}
-						</li>
-					{% endfor %}
+			
+			{% for message in messages %}
+				{% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+					<div class="alert alert-danger {% if message.tags %} {{ message.tags }} {% endif %}" role="alert">
+					{{ message }}
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-11 font-title main-title">{{user.username}}'s Books:</div>
+			<div class="col-md-1">
+				<a href="{% url 'lend:lend-book-add' %}" class="my-1 btn btn-lg btn-success"><i class="fa fa-plus"></i> Add Book</a>
+			</div>
+		</div>
+	</div>
+<div class="container">
+{% if books %}
+	{% for book in books %}
+		{% if forloop.counter0|divisibleby:3 %}
+			<div class="row my-2">
+				
+			{% endif %}
+			<div class="col-md-4 card bg-transparent py-2">
+			<div class="row">
+				<div class="col-md-6">
+					<img src="{{ book.book_cover.url }}" width="100%">
+				</div>
+				<div class="col-md-6">
+					<h4>{{ book.book_name }}</h4>
+					<h5>By {{ book.book_author }}</h5>
+					<h6><strong>Category: </strong>{{ book.book_category }}</h6>
+					{% if book.book_genre.all|length %}
+						<h6><strong>Genre: </strong>
+						{% for genre in book.book_genre.all %}
+							{{ genre }}{% if forloop.counter < book.book_genre.all|length %},{% endif %}
+						{% endfor %}
+					{% endif %}
+					{% if book.book_edition %}
+						<h6><strong>Edition:</strong>{{book.book_edition}}</h6>
+						
+					{% endif %}
+					<ul class="list-inline list-unstyled my-2">
+						<li class="list-inline-item"><a href="{% url 'lend:lend-book-update' book.id %}"
+							class="btn btn-warning btn-sm">
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+						</a></li>
+						<li class="list-inline-item"><a href="{% url 'lend:lend-book-delete' book.id %}" class="btn btn-danger btn-sm delete">
+							<i class="fa fa-trash" aria-hidden="true"></i>
+						</a></li>
+						<li class="list-inline-item"><a href="#" class="btn btn-info btn-sm btn-favorite" data-toggle="tooltip" id="borrowable" data-placement="bottom" title="The book is {% if not book.book_borrowable %}not{% endif %} borrowable.">
+						<i class="fa fa-star{% if not book.book_borrowable %}-o{% endif %}"></i>
+					</a></li>
 				</ul>
 			</div>
-		{% endif %}
-
-<div class="container">
-<div class="row">
-<div class="col-md-11 font-title main-title">{{user.username}}'s Books:</div>
-<div class="col-md-1">
-<a href="{% url 'lend:lend-book-add' %}" data-toggle="modal" data-target="#addBookModal" class="my-1 btn btn-lg btn-success"><i class="fa fa-plus"></i> Add Book</a>
-</div>
-</div>
-</div>
-	<div class="row">
-		{% if books %}
-			{% for book in books %}
-				<div class="card card-body mx-0 my-3 col-md-4">
-					<div class="media">
-						<a class="float-left" href="{% url 'lend:lend-book-details' book.id %}">
-							<img class="media-object mx-2" src="{{ book.book_cover.url }}" height="300">
-						</a>
-						<div class="media-body">
-							<h4>{{ book.book_name }}</h4>
-							<h5>By {{ book.book_author }}</h5>
-							<h6><strong>Category: </strong>{{ book.book_category }}</h6>
-							<h6><strong>Genre: </strong>
-							{% for genre in book.book_genre.all %}
-								{{ genre }}{% if forloop.counter < book.book_genre.all|length %},{% endif %}
-							{% endfor %}
-							{% if book.book_edition %}
-								<h6><strong>Edition:</strong>{{book.book_edition}}</h6>
-								
-							{% endif %}
-							<ul class="list-inline list-unstyled my-2">
-								<li class="list-inline-item"><a href="{% url 'lend:lend-book-update' book.id %}"
-									class="btn btn-warning btn-sm">
-									<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-								</a></li>
-								<li class="list-inline-item"><a href="{% url 'lend:lend-book-delete' book.id %}" class="btn btn-danger btn-sm delete">
-									<i class="fa fa-trash" aria-hidden="true"></i>
-								</a></li>
-								<li class="list-inline-item"><a href="#" class="btn btn-info btn-sm btn-favorite" data-toggle="tooltip" id="borrowable" data-placement="bottom" title="The book is {% if not book.book_borrowable %}not{% endif %} borrowable.">
-								<i class="fa fa-star{% if not book.book_borrowable %}-o{% endif %}"></i>
-							</a></li>
-						</ul>
-					</div>
-				</div>
 			</div>
-		{% endfor %}
-	{% else %}
-		{{errors}}
+		</div>
+		{% if forloop.counter0|add:1|divisibleby:3 %}
+		</div>
+		
 	{% endif %}
+{% endfor %}
+{% else %}
+<div class="alert alert-danger" role="alert">
+	<strong>You don't have any books. Add a book for someone to borrow.</strong>
 </div>
-</div>
-{% endblock %}
-{% block modal %}
-    <div class="modal fade" id="addBookModal" tabindex="-1" role="dialog" aria-labelledby="addBookModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-body">
-        {% include "lend/form_book.html" %}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
+{% endif %}
 </div>
 {% endblock %}
