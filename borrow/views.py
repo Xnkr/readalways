@@ -8,6 +8,7 @@ from lend import models
 from models import BookRequest
 
 from django.contrib import messages
+from django.db.models import Q
 # Create your views here.
 
 @login_required(login_url='/accounts/login/')
@@ -50,3 +51,20 @@ def fetch_details(request):
 	template_name = 'borrow/detail.html'
 
 	return render(request,template_name,context)
+
+@login_required
+def search(request):
+	q = request.GET.get('q')
+	print q
+	results = None
+	template_name = 'borrow/results.html'
+	if q is not None:
+		books = models.Book.objects.exclude(book_lender=request.user)
+		books = books.filter(book_borrowable=True)
+		results = books.filter(Q( book_name__contains = q ) |
+			Q( book_author__contains = q )).order_by('book_name')
+		print results
+	context = {
+		'results':results,
+	}
+	return render(request, template_name, context)

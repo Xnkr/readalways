@@ -21,5 +21,6 @@ app_name = 'borrow'
 
 urlpatterns = [
     url(r'^$', views.home, name='borrow_home'),
-    url(r'^fetch/$',views.fetch_details,name='fetch_details')
+    url(r'^fetch$',views.fetch_details,name='fetch_details'),
+    url(r'^search$',views.search,name='search'),
 ]

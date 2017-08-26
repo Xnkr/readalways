@@ -19,11 +19,12 @@
 	{% endif %}
 </div>
 <div class="container">
-	<form action="#" class="form-inline" method="get">
-		<input type="text" class="form-control col-md-11 my-2 mr-0" name="q" placeholder="Search">
-		<button type="submit" class="btn btn-info col-md-1">Search</button>
-	</form>
+	<div class="form-inline">
+		<input type="text" id="q" class="form-control col-md-11 my-2 mr-0" name="q" placeholder="Search Book or Author">
+		<button id="searchSubmit" class="btn btn-info col-md-1">Search</button>
+	</div>
 </div>
+<div id="results"></div>
 <div class="container">
 	{% if book_by_user %}
 		{% for lender,books in book_by_user.items %}

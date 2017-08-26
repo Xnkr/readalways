@@ -12,8 +12,8 @@ $(document).ready(function() {
     })
 
     $('#bookModal').on('show.bs.modal', function(event) {
-        var button = $(event.relatedTarget) // Button that triggered the modal
-        var book_id = button.data('book-id') // Extract info from data-* attributes
+        var button = $(event.relatedTarget)
+        var book_id = button.data('book-id')
         $.ajax({
             type: "GET",
             url: "/borrow/fetch",
@@ -28,5 +28,28 @@ $(document).ready(function() {
             }
         })
     })
+
+    function search() {
+        var q = $('#q').val();
+        $.ajax({
+            type: "GET",
+            url: "/borrow/search",
+            data: {
+                q: q
+            },
+            success: function(data) {
+                $('#results').html(data);
+                e.preventDefault();
+            }
+        })
+    }
+    $('#searchSubmit').click(function(e) {
+        search();
+    });
+    $('#q').keypress(function(e) {
+        if (e.which == 13) {
+            search();
+        }
+    });
 
 });
